@@ -38,8 +38,8 @@ public class IntQueueTest {
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-    //    mQueue = new ArrayIntQueue();
+        // mQueue = new LinkedIntQueue();
+       mQueue = new ArrayIntQueue();
 
         testList = new ArrayList<>(List.of(1, 2, 3));
     }
@@ -53,19 +53,22 @@ public class IntQueueTest {
     @Test
     public void testNotEmpty() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(1);
+        assertFalse(mQueue.isEmpty());
     }
 
     @Test
     public void testPeekEmptyQueue() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        assertNull(mQueue.peek());
     }
 
     @Test
     public void testPeekNoEmptyQueue() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(5);
+        assertEquals(Integer.valueOf(5), mQueue.peek());
+        assertEquals(1, mQueue.size());
     }
 
     @Test
@@ -81,7 +84,11 @@ public class IntQueueTest {
     @Test
     public void testDequeue() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(1);
+        mQueue.enqueue(2);
+        assertEquals(Integer.valueOf(1), mQueue.dequeue());
+        assertEquals(Integer.valueOf(2), mQueue.dequeue());
+        assertTrue(mQueue.isEmpty());
     }
 
     @Test
@@ -104,6 +111,63 @@ public class IntQueueTest {
             }
         }
     }
+    @Test
+public void testClear() {
+    mQueue.enqueue(1);
+    mQueue.enqueue(2);
+    mQueue.clear();
+    assertTrue(mQueue.isEmpty());
+    assertEquals(0, mQueue.size());
+}
+
+@Test
+public void testSize() {
+    assertEquals(0, mQueue.size());
+    mQueue.enqueue(1);
+    assertEquals(1, mQueue.size());
+    mQueue.enqueue(2);
+    assertEquals(2, mQueue.size());
+    mQueue.dequeue();
+    assertEquals(1, mQueue.size());
+}
+
+@Test
+public void testEnsureCapacity() {
+    // Fill the queue to its initial capacity
+    for (int i = 0; i < 10; i++) {
+        mQueue.enqueue(i);
+    }
+    
+    // Dequeue some elements to create a wraparound scenario
+    for (int i = 0; i < 5; i++) {
+        assertEquals(Integer.valueOf(i), mQueue.dequeue());
+    }
+    
+    // Fill the queue again to reach capacity
+    for (int i = 10; i < 15; i++) {
+        mQueue.enqueue(i);
+    }
+    
+    // At this point, the queue should be full with elements wrapped around
+    // Now, enqueue one more element to trigger ensureCapacity with wraparound
+    mQueue.enqueue(15);
+    
+    // Verify all elements are in the correct order after expansion
+    for (int i = 5; i <= 15; i++) {
+        assertEquals(Integer.valueOf(i), mQueue.dequeue());
+    }
+    
+    assertTrue(mQueue.isEmpty());
+}
+
+@Test
+public void testDequeueEmptyQueue() {
+    // Ensure the queue is empty
+    assertTrue(mQueue.isEmpty());
+    
+    // Try to dequeue from an empty queue
+    assertNull(mQueue.dequeue());
+}
 
 
 }
